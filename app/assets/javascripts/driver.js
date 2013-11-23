@@ -98,66 +98,9 @@ var comiskeyCoords = [
   })
 
 
-function stadiumThrob(stadium){
-  setInterval(function(){
-      stadium.setMap(null)
-    if(stadium.fillOpacity === 0.2){
-      stadium.fillOpacity = 0.3
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.3){
-      stadium.fillOpacity = 0.4
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.4){
-      stadium.fillOpacity = 0.5
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.5){
-      stadium.fillOpacity = 0.6
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.6){
-      stadium.fillOpacity = 0.7
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.7){
-      stadium.fillOpacity = 0.8
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.8){
-      stadium.fillOpacity = 0.9
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.9){
-      stadium.fillOpacity = 0.81
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.81){
-      stadium.fillOpacity = 0.71
-      stadium.setMap(map);
-    }
-    else if(stadium.fillOpacity === 0.71){
-      stadium.fillOpacity = 0.61
-      stadium.setMap(map);
-    }  else if(stadium.fillOpacity === 0.61){
-      stadium.fillOpacity = 0.51
-      stadium.setMap(map);
-    }  else if(stadium.fillOpacity === 0.51){
-      stadium.fillOpacity = 0.41
-      stadium.setMap(map);
-    }  else if(stadium.fillOpacity === 0.41){
-      stadium.fillOpacity = 0.31
-      stadium.setMap(map);
-    }  else if(stadium.fillOpacity === 0.31){
-      stadium.fillOpacity = 0.2
-      stadium.setMap(map);
-    }
-  },100);
-}
-
 // ////////EVENTFUL/////////////////////////////////////
-  var eventful = new WebSocketRails('limitless-temple-4888.herokuapp.com/websocket');
+
+ var eventful = new WebSocketRails('limitless-temple-4888.herokuapp.com/websocket');
   eventful.trigger("events.eventful")
   setInterval(function(){
     eventful.trigger("events.eventful")
@@ -187,7 +130,76 @@ function stadiumThrob(stadium){
       else{
         getMarker(value.latitude, value.longitude, map, value);
       }
-      console.log("hey")
+    });
+  });
+  
+  function stadiumThrob(stadium){
+    setInterval(function(){
+        stadium.setMap(null)
+      if(stadium.fillOpacity === 0.2){
+        stadium.fillOpacity = 0.3
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.3){
+        stadium.fillOpacity = 0.4
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.4){
+        stadium.fillOpacity = 0.5
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.5){
+        stadium.fillOpacity = 0.6
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.6){
+        stadium.fillOpacity = 0.7
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.7){
+        stadium.fillOpacity = 0.8
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.8){
+        stadium.fillOpacity = 0.9
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.9){
+        stadium.fillOpacity = 0.81
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.81){
+        stadium.fillOpacity = 0.71
+        stadium.setMap(map);
+      }
+      else if(stadium.fillOpacity === 0.71){
+        stadium.fillOpacity = 0.61
+        stadium.setMap(map);
+      }  else if(stadium.fillOpacity === 0.61){
+        stadium.fillOpacity = 0.51
+        stadium.setMap(map);
+      }  else if(stadium.fillOpacity === 0.51){
+        stadium.fillOpacity = 0.41
+        stadium.setMap(map);
+      }  else if(stadium.fillOpacity === 0.41){
+        stadium.fillOpacity = 0.31
+        stadium.setMap(map);
+      }  else if(stadium.fillOpacity === 0.31){
+        stadium.fillOpacity = 0.2
+        stadium.setMap(map);
+      }
+    },100);
+  }
+
+////////  EVENTBRITE   /////////////////////////////////////
+  var eventbrite = new WebSocketRails('limitless-temple-4888.herokuapp.com/websocket');
+  eventbrite.trigger("events.eventbrite")
+  setInterval(function(){
+    eventbrite.trigger("events.eventbrite")
+  },180000);
+  eventbrite.bind("events.eventbrite_success", function(message){
+    $.each(message, function(index, value){
+      briteMarker(value.latitude, value.longitude, map, value);
     });
   });
 
@@ -197,8 +209,9 @@ function stadiumThrob(stadium){
   var colcounter = 1;
   // var idcounter = 1;
   instagram.bind("events.instagram_success", function(message){
+    var url = message.url.replace(/(width=)(\d{3})(\sheight=)(\d{3})/,"$1250$3250");
     var $that = $("#instafeed #column" + colcounter).prepend("<div id='instaitem'>" + "<div class='instagram'>" + message.url + "</div><div class='lat'>" + message.latitude + "</div>" + "<div class='lon'>"+ message.longitude +"</div></div>");
-    setMarker(message.latitude, message.longitude, map, message.url);
+    setMarker(message.latitude, message.longitude, map, url);
     // setTimeout(function(){
       // var id_remove = '#' + (idcounter - 1)
        // $(id_remove).remove()
@@ -229,7 +242,6 @@ function stadiumThrob(stadium){
     // console.log(message);
     $.each(message.ctatt.route,function(index, value){
       $.each(value.train,function(ind, val){
-        console.log("hello")
         trainMarker(val.lat.$, val.lon.$, map, index, 'Train: ' + val.rn.$ + '<br>' + 'Headed to ' + val.destNm.$ + '<br>' + 'Next Stop: ' + val.nextStaNm.$)
         // + ' in ' + Math.round(((new Date(val.arrT.$.replace(/(\d{4})(\d{2})(\d{2})/,"$1-$2-$3")) - new Date()) / 60000 )) + ' minutes' )
       });
